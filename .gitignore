@@ -1,0 +1,16 @@
+# Nim compiler and documentation output
+nimcache/
+htmldocs/
+
+# Generated test and example executables
+/examples/advanced_tables
+/examples/all_tables
+/examples/basic_table
+/examples/data_adapters
+/examples/live_data_table
+/examples/transform_tables
+/tests/test_terminal_tables
+/tests/test_typed_data
+
+# Other
+RELEASING.md
