@@ -7,8 +7,14 @@ resize-safe dashboards, and rolling real-time feeds. It renders to strings,
 has no import-time side effects, and understands ANSI styling, OSC hyperlinks,
 Unicode, and terminal-cell width.
 
+<p align="center">
+  <img src="examples/images/hero-collage.png"
+       alt="Collage of terminal_tables themes, advanced layouts, data adapters, transformations, and live output"
+       width="1100">
+</p>
+
 - Nim 2.0.0 or newer
-- `terminal_styles` 0.1.0 or newer
+- `terminal_styles` 0.1.0 or newer, installed from GitHub
 - No runtime dependencies beyond `terminal_styles`
 
 ## Contents
@@ -31,8 +37,13 @@ Unicode, and terminal-cell width.
 Install the current source version with Nimble:
 
 ```sh
+nimble install https://github.com/titanomachy/terminal-styles
 nimble install https://github.com/titanomachy/terminal-tables
 ```
+
+`terminal_styles` is installed directly from its
+[GitHub repository](https://github.com/titanomachy/terminal-styles) because it
+is not yet listed in the Nimble package directory.
 
 Then import the complete core API:
 
@@ -385,22 +396,15 @@ detection. `LiveTable` is intentionally not synchronized: keep mutation and
 `draw` on one rendering thread, and pass immutable updates or protected
 snapshots from background producers.
 
-### Live demo video
+### Live demo
 
 <p align="center">
-  <a href="examples/images/live_data_table.mp4">
-    <img src="examples/images/live-data-table.png"
-         alt="Preview of the resize-safe rolling live table demo"
-         width="620">
-  </a>
+  <img src="examples/images/live_data_table.gif"
+       alt="Animated resize-safe rolling live table demo"
+       width="650">
 </p>
 
-<p align="center">
-  <strong><a href="examples/images/live_data_table.mp4">▶ Watch the live table demo</a></strong>
-  · MP4 · 11 seconds
-</p>
-
-The recording runs [`examples/live_data_table.nim`](examples/live_data_table.nim),
+The animation runs [`examples/live_data_table.nim`](examples/live_data_table.nim),
 which simulates incoming service metrics, retains a bounded rolling window,
 responds to terminal resizing, and restores terminal state on exit.
 

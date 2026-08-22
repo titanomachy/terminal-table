@@ -2,6 +2,6 @@
 ## Installed packages resolve ``terminal_styles`` through Nimble instead.
 import std/os
 
-let siblingStyles = thisDir() / ".." / "terminal_styles" / "src"
+let siblingStyles = thisDir() / ".." / "terminal-styles" / "src"
 if dirExists(siblingStyles):
   switch("path", siblingStyles)
