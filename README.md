@@ -19,12 +19,22 @@ Unicode, and terminal-cell width.
        width="1100">
 </p>
 
+## Platform support
+
+`terminal_tables` has been tested on Linux and Windows. It should also work on
+macOS through its standard POSIX terminal and ANSI/VT support, but macOS has not
+yet been tested directly.
+
+## Requirements
+
 - Nim 2.0.0 or newer
 - [`terminal_styles`](https://github.com/titanomachy/terminal-styles) 0.1.0 or newer, installed from GitHub
 - No runtime dependencies beyond `terminal_styles`
 
 ## Contents
 
+- [Platform support](#platform-support)
+- [Requirements](#requirements)
 - [Installation](#installation)
 - [Quick start](#quick-start)
 - [Features](#features)
