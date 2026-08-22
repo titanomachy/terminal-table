@@ -8,13 +8,19 @@ has no import-time side effects, and understands ANSI styling, OSC hyperlinks,
 Unicode, and terminal-cell width.
 
 <p align="center">
+  <img src="examples/images/live_data_table.gif"
+       alt="Animated rolling live table with styled service metrics"
+       width="650">
+</p>
+
+<p align="center">
   <img src="examples/images/hero-collage.png"
-       alt="Collage of terminal_tables themes, advanced layouts, data adapters, transformations, and live output"
+       alt="Collage of terminal_tables themes, advanced layouts, data adapters, and transformations"
        width="1100">
 </p>
 
 - Nim 2.0.0 or newer
-- `terminal_styles` 0.1.0 or newer, installed from GitHub
+- [`terminal_styles`](https://github.com/titanomachy/terminal-styles) 0.1.0 or newer, installed from GitHub
 - No runtime dependencies beyond `terminal_styles`
 
 ## Contents
@@ -315,6 +321,36 @@ list. Detailed contracts and error behavior are in
        width="560">
 </p>
 
+### Interactive CSV viewer
+
+The current APIs are enough to build a compact,
+[csvlens-inspired](https://github.com/YS-L/csvlens) viewer. The example combines
+CSV parsing, a height-aware row and column viewport, selected cell styling,
+responsive full-screen redraws, and Nim's standard terminal input:
+
+```sh
+nim c -r --path:src examples/csv_viewer.nim -- examples/data/service_metrics.csv
+```
+
+The repository includes
+[`service_metrics.csv`](examples/data/service_metrics.csv), with enough rows
+and columns to exercise both viewport directions. Run the viewer without a
+filename to use its embedded sample data. Use `h`, `j`, `k`, and `l` to move,
+`g`/`G` to jump to the first or last row, `0`/`$` for the first or last column,
+`r` to reset, Enter to print the selected value, and `q` to quit.
+
+<p align="center">
+  <img src="examples/images/csv_viewer.png"
+       alt="Interactive terminal CSV viewer showing service metrics and keyboard controls"
+       width="1000">
+</p>
+
+This demonstrates that `terminal_tables` can provide the rendering layer for
+an interactive CSV application. A full csvlens-class viewer still needs an
+application/TUI layer for cross-platform key events, efficient virtualized
+data access, search and filtering prompts, sorting, frozen columns, row marks,
+clipboard integration, streaming input, and file watching.
+
 `markdownTheme` produces Markdown-style terminal text. Semantic Markdown and
 HTML exporters are intentionally deferred until advanced spans, panels,
 multiline values, styling, and hyperlinks have an explicit lossless contract.
@@ -429,6 +465,7 @@ Every public feature family has a finite, runnable example:
 |---|---|
 | [`basic_table.nim`](examples/basic_table.nim) | Core model, rounded theme, color, and alignment |
 | [`advanced_tables.nim`](examples/advanced_tables.nim) | Selectors, panels, spans, decoration, and transpose |
+| [`csv_viewer.nim`](examples/csv_viewer.nim) | Interactive CSV viewport, cell selection, and keyboard navigation |
 | [`data_adapters.nim`](examples/data_adapters.nim) | Typed objects, CSV, and JSON |
 | [`transform_tables.nim`](examples/transform_tables.nim) | Transpose, split, composition, and duplication |
 | [`live_data_table.nim`](examples/live_data_table.nim) | Responsive rolling live data and terminal restoration |

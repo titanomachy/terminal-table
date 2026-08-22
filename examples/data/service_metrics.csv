@@ -1,0 +1,16 @@
+Timestamp,Service,Region,Requests,LatencyMs,Status,Notes
+2026-08-22T14:00:01Z,api,Europe,1842,28,healthy,"Primary, customer-facing API"
+2026-08-22T14:00:02Z,gateway,Global,2815,42,healthy,Traffic routing
+2026-08-22T14:00:03Z,worker,North America,973,76,degraded,Queue depth increasing
+2026-08-22T14:00:04Z,scheduler,Asia Pacific,679,31,healthy,Scheduled jobs
+2026-08-22T14:00:05Z,api,Europe,755,119,critical,"Timeouts in payment, search"
+2026-08-22T14:00:06Z,queue,Global,382,67,degraded,Retry rate elevated
+2026-08-22T14:00:07Z,worker,Asia Pacific,863,23,healthy,Image processing
+2026-08-22T14:00:08Z,gateway,North America,554,105,critical,Upstream saturation
+2026-08-22T14:00:09Z,scheduler,Europe,277,38,healthy,Maintenance tasks
+2026-08-22T14:00:10Z,api,Global,526,51,degraded,Cache warming
+2026-08-22T14:00:11Z,queue,Asia Pacific,899,19,healthy,Normal throughput
+2026-08-22T14:00:12Z,worker,Europe,776,88,critical,"Slow export, large batch"
+2026-08-22T14:00:13Z,gateway,Global,458,34,healthy,TLS termination
+2026-08-22T14:00:14Z,api,North America,456,63,degraded,Replica lag
+2026-08-22T14:00:15Z,scheduler,Europe,392,12,healthy,Normal operation

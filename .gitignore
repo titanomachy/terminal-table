@@ -6,6 +6,7 @@ htmldocs/
 /examples/advanced_tables
 /examples/all_tables
 /examples/basic_table
+/examples/csv_viewer
 /examples/data_adapters
 /examples/live_data_table
 /examples/transform_tables

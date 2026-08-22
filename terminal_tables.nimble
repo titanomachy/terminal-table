@@ -20,6 +20,7 @@ task examples, "Check that all examples compile":
   exec "nim check examples/basic_table.nim"
   exec "nim check examples/all_tables.nim"
   exec "nim check examples/advanced_tables.nim"
+  exec "nim check examples/csv_viewer.nim"
   exec "nim check examples/data_adapters.nim"
   exec "nim check examples/live_data_table.nim"
   exec "nim check examples/transform_tables.nim"
