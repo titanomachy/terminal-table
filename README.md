@@ -413,8 +413,10 @@ Only `draw` publishes a frame, so multiple updates can be batched. `renderFrame`
 returns the responsive frame without taking ownership of the terminal.
 
 Full-screen mode is the default. It detects terminal width on every draw,
-clears the previous frame, and uses the POSIX alternate screen when available.
-Set `options.mode = ltmInPlace` to preserve content above the table. In-place
+overwrites the previous frame, and uses the terminal's alternate screen when
+available. On Windows 10 and newer, live sessions enable virtual-terminal
+processing and restore the original console mode when they stop. Set
+`options.mode = ltmInPlace` to preserve content above the table. In-place
 redraws account for physical rows introduced by wrapping after a resize.
 
 For rolling feeds, cap the retained body rows:

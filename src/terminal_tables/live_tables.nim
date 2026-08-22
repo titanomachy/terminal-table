@@ -3,10 +3,13 @@
 ## ``LiveTable`` separates data updates from terminal ownership. Applications
 ## mutate ``table`` or use the convenience update procedures, then call
 ## ``draw``. Full-screen mode replaces the complete terminal frame and can use
-## the POSIX alternate screen. In-place mode preserves content above the table
-## and accounts for terminal rows created by wrapping after a resize.
+## the terminal's alternate screen. In-place mode preserves content above the
+## table and accounts for terminal rows created by wrapping after a resize.
 
 import std/[strutils, terminal]
+
+when defined(windows):
+  import std/winlean
 
 import ./renderers
 
@@ -36,7 +39,50 @@ type
     output: File
     active: bool
     usingAlternateScreen: bool
+    usingVtSequences: bool
     previousFrame: string
+    when defined(windows):
+      windowsConsoleHandle: Handle
+      windowsOriginalMode: DWORD
+      windowsModeChanged: bool
+
+when defined(windows):
+  const
+    enableProcessedOutput = DWORD(0x0001)
+    enableVirtualTerminalProcessing = DWORD(0x0004)
+
+  proc getConsoleMode(handle: Handle; mode: ptr DWORD): WINBOOL {.
+      stdcall, dynlib: "kernel32", importc: "GetConsoleMode".}
+
+  proc setConsoleMode(handle: Handle; mode: DWORD): WINBOOL {.
+      stdcall, dynlib: "kernel32", importc: "SetConsoleMode".}
+
+  proc enableWindowsVt(live: var LiveTable): bool =
+    if not live.output.isatty or
+        (live.output != stdout and live.output != stderr):
+      return false
+    let handle = getStdHandle(
+      if live.output == stderr: STD_ERROR_HANDLE else: STD_OUTPUT_HANDLE)
+    if handle == INVALID_HANDLE_VALUE:
+      return false
+    var originalMode: DWORD
+    if getConsoleMode(handle, addr originalMode) == 0:
+      return false
+    let requestedMode = originalMode or enableProcessedOutput or
+      enableVirtualTerminalProcessing
+    if requestedMode != originalMode and
+        setConsoleMode(handle, requestedMode) == 0:
+      return false
+    live.windowsConsoleHandle = handle
+    live.windowsOriginalMode = originalMode
+    live.windowsModeChanged = requestedMode != originalMode
+    true
+
+  proc restoreWindowsConsoleMode(live: var LiveTable) =
+    if live.windowsModeChanged:
+      discard setConsoleMode(live.windowsConsoleHandle,
+        live.windowsOriginalMode)
+    live.windowsModeChanged = false
 
 proc initLiveTableOptions*(): LiveTableOptions =
   ## Returns resize-safe full-screen defaults.
@@ -148,23 +194,48 @@ proc physicalLineCount(frame: string; width: int): int =
 proc clearLinesSequence(lineCount: int): string =
   if lineCount > 0: "\e[" & $lineCount & "A\e[J" else: ""
 
+proc fullScreenSequence(frame: string): string =
+  ## Replaces only visible frame rows and emits the update as one write. The
+  ## final erase also removes rows left behind by a previously taller frame.
+  result = "\e[H"
+  if frame.len == 0:
+    result.add "\e[J"
+    return
+  let lines = frame.splitLines()
+  for index, line in lines:
+    result.add(if index == lines.high: "\e[J" else: "\e[2K")
+    result.add line
+    if index < lines.high:
+      result.add '\n'
+
 proc startLive*(live: var LiveTable) =
   ## Starts the configured display and hides the cursor.
   ##
   ## Calling this procedure again while active has no effect. Alternate-screen
-  ## mode applies only to a full-screen live table attached to a POSIX TTY.
+  ## mode applies to a full-screen live table attached to a VT-capable TTY.
   if live.active:
     return
   live.options.validate()
+
   when defined(posix):
-    if live.options.mode == ltmFullScreen and
-        live.options.alternateScreen and live.output.isatty:
-      live.output.write "\e[?1049h"
-      live.usingAlternateScreen = true
+    live.usingVtSequences = true
+  elif defined(windows):
+    live.usingVtSequences = live.enableWindowsVt()
+
+  if live.options.mode == ltmFullScreen and live.options.alternateScreen and
+      live.output.isatty and live.usingVtSequences:
+    live.output.write "\e[?1049h"
+    live.usingAlternateScreen = true
   if live.options.mode == ltmFullScreen:
-    live.output.setCursorPos(0, 0)
-    live.output.eraseScreen()
-  live.output.hideCursor()
+    if live.usingVtSequences:
+      live.output.write "\e[2J\e[H"
+    else:
+      live.output.setCursorPos(0, 0)
+      live.output.eraseScreen()
+  if live.usingVtSequences:
+    live.output.write "\e[?25l"
+  else:
+    live.output.hideCursor()
   live.output.flushFile()
   live.previousFrame.setLen(0)
   live.active = true
@@ -182,9 +253,16 @@ proc draw*(live: var LiveTable) =
     frame = live.table.render(width)
   case live.options.mode
   of ltmFullScreen:
-    live.output.setCursorPos(0, 0)
-    live.output.eraseScreen()
-    live.output.write frame
+    if live.usingVtSequences:
+      # Keep the clear and replacement in one terminal write so an incomplete
+      # frame is not presented between updates. On Windows this also avoids
+      # Nim's eraseScreen, which clears the complete scrollback buffer through
+      # several Win32 calls and can be visibly slow for a large buffer.
+      live.output.write frame.fullScreenSequence()
+    else:
+      live.output.setCursorPos(0, 0)
+      live.output.eraseScreen()
+      live.output.write frame
   of ltmInPlace:
     if live.previousFrame.len > 0:
       live.output.write clearLinesSequence(
@@ -200,12 +278,18 @@ proc stopLive*(live: var LiveTable) =
   ## Calling this procedure for an inactive table has no effect.
   if not live.active:
     return
-  live.output.resetAttributes()
-  when defined(posix):
+  if live.usingVtSequences:
+    live.output.write "\e[0m"
     if live.usingAlternateScreen:
       live.output.write "\e[?1049l"
-  live.output.showCursor()
+    live.output.write "\e[?25h"
+  else:
+    live.output.resetAttributes()
+    live.output.showCursor()
   live.output.flushFile()
+  when defined(windows):
+    live.restoreWindowsConsoleMode()
   live.active = false
   live.usingAlternateScreen = false
+  live.usingVtSequences = false
   live.previousFrame.setLen(0)

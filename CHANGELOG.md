@@ -30,12 +30,14 @@ release.
 - Add `renderToTerminalWidth` for responsive rendering against the currently
   detected terminal width.
 - Add mutable `LiveTable` displays with explicit start, draw, and stop lifecycle
-  methods, resize-safe full-screen redraws, and optional POSIX alternate-screen
-  support.
+  methods, resize-safe full-screen redraws, and optional cross-platform
+  alternate-screen support.
 - Add an in-place live-table mode that preserves earlier terminal content and
   clears the previous frame using its resize-adjusted physical height.
 - Add efficient live cell and row replacement, append operations, configurable
   bounded rolling rows, and side-effect-free `renderFrame` output.
+- Add efficient Windows redraws using restored virtual-terminal state and
+  viewport-only frame replacement instead of clearing the console scrollback.
 - Add a simulated real-time service-metrics example with responsive rendering,
   rolling data, Ctrl+C handling, and clean terminal-state restoration.
 

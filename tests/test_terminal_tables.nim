@@ -391,8 +391,8 @@ suite "live tables":
       output.close()
       outputOpen = false
       let emitted = path.readFile()
-      check emitted.startsWith("\e[1;1f\e[2J\e[?25l")
-      check "\e[1;1f\e[2Jlive value" in emitted
+      check emitted.startsWith("\e[2J\e[H\e[?25l")
+      check "\e[H\e[Jlive value" in emitted
       check emitted.endsWith("\e[0m\e[?25h")
 
     test "clears resize-wrapped physical rows in in-place mode":
