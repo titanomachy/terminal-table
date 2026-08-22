@@ -1,4 +1,4 @@
-# terminal_tables
+# TerminalTables
 
 Responsive, styled, and live terminal tables for Nim.
 
@@ -21,7 +21,7 @@ Unicode, and terminal-cell width.
 
 ## Platform support
 
-`terminal_tables` has been tested on Linux and Windows. It should also work on
+TerminalTables has been tested on Linux and Windows. It should also work on
 macOS through its standard POSIX terminal and ANSI/VT support, but macOS has not
 yet been tested directly.
 
@@ -33,20 +33,31 @@ yet been tested directly.
 
 ## Contents
 
-- [Platform support](#platform-support)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Quick start](#quick-start)
-- [Features](#features)
-- [Models and builders](#models-and-builders)
-- [Layout and styling](#layout-and-styling)
-- [Advanced tables](#advanced-tables)
-- [Data adapters](#data-adapters)
-- [Transformations](#transformations)
-- [Live tables](#live-tables)
-- [Rendering](#rendering)
-- [Examples and documentation](#examples-and-documentation)
-- [Development](#development)
+- [TerminalTables](#terminaltables)
+  - [Platform support](#platform-support)
+  - [Requirements](#requirements)
+  - [Contents](#contents)
+  - [Installation](#installation)
+  - [Quick start](#quick-start)
+  - [Features](#features)
+  - [Models and builders](#models-and-builders)
+  - [Layout and styling](#layout-and-styling)
+    - [Themes](#themes)
+    - [Width and overflow](#width-and-overflow)
+    - [Alignment, padding, and margins](#alignment-padding-and-margins)
+    - [Styles and shadows](#styles-and-shadows)
+  - [Advanced tables](#advanced-tables)
+  - [Data adapters](#data-adapters)
+    - [Typed objects](#typed-objects)
+    - [CSV and JSON](#csv-and-json)
+    - [Interactive CSV viewer](#interactive-csv-viewer)
+  - [Transformations](#transformations)
+  - [Live tables](#live-tables)
+    - [Live demo](#live-demo)
+  - [Rendering](#rendering)
+  - [Examples and documentation](#examples-and-documentation)
+  - [Development](#development)
+  - [Acknowledgements](#acknowledgements)
 
 ## Installation
 
