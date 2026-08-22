@@ -196,16 +196,20 @@ proc clearLinesSequence(lineCount: int): string =
 
 proc fullScreenSequence(frame: string): string =
   ## Replaces only visible frame rows and emits the update as one write. The
-  ## final erase also removes rows left behind by a previously taller frame.
+  ## new content is painted before any unused row tail is erased, so terminals
+  ## cannot present a blank scan line while processing the update. The final
+  ## erase also removes rows left behind by a previously taller frame.
   result = "\e[H"
   if frame.len == 0:
     result.add "\e[J"
     return
   let lines = frame.splitLines()
   for index, line in lines:
-    result.add(if index == lines.high: "\e[J" else: "\e[2K")
     result.add line
-    if index < lines.high:
+    if index == lines.high:
+      result.add "\e[J"
+    else:
+      result.add "\e[K"
       result.add '\n'
 
 proc startLive*(live: var LiveTable) =

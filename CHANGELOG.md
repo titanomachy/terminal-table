@@ -36,8 +36,9 @@ release.
   clears the previous frame using its resize-adjusted physical height.
 - Add efficient live cell and row replacement, append operations, configurable
   bounded rolling rows, and side-effect-free `renderFrame` output.
-- Add efficient Windows redraws using restored virtual-terminal state and
-  viewport-only frame replacement instead of clearing the console scrollback.
+- Add efficient, scan-line-free Windows redraws using restored virtual-terminal
+  state and viewport-only frame replacement instead of clearing the console
+  scrollback.
 - Add a simulated real-time service-metrics example with responsive rendering,
   rolling data, Ctrl+C handling, and clean terminal-state restoration.
 
