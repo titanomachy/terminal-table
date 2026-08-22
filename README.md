@@ -10,13 +10,13 @@ Unicode, and terminal-cell width.
 <p align="center">
   <img src="examples/images/live_data_table.gif"
        alt="Animated rolling live table with styled service metrics"
-       width="650">
+       width="60%">
 </p>
 
 <p align="center">
   <img src="examples/images/hero-collage.png"
        alt="Collage of terminal_tables themes, advanced layouts, data adapters, and transformations"
-       width="1100">
+       width="100%">
 </p>
 
 ## Platform support
@@ -91,7 +91,7 @@ echo table.render(maxWidth = 60)
 <p align="center">
   <img src="examples/images/basic-table.png"
        alt="A rounded terminal table with aligned and colored cells"
-       width="600">
+       width="55%">
 </p>
 
 ## Features
@@ -272,7 +272,7 @@ not enough. Selector unions modify each matching cell once.
 <p align="center">
   <img src="examples/images/advanced-tables.png"
        alt="An advanced terminal table with a title, panel, spans, footer, colors, and shadow"
-       width="760">
+       width="52%">
 </p>
 
 The exact layout and span contracts are documented in
@@ -328,7 +328,7 @@ list. Detailed contracts and error behavior are in
 <p align="center">
   <img src="examples/images/data-adapters.png"
        alt="Terminal tables created from typed Nim objects, CSV, and JSON"
-       width="560">
+       width="42%">
 </p>
 
 ### Interactive CSV viewer
@@ -352,7 +352,7 @@ filename to use its embedded sample data. Use `h`, `j`, `k`, and `l` to move,
 <p align="center">
   <img src="examples/images/csv_viewer.png"
        alt="Interactive terminal CSV viewer showing service metrics and keyboard controls"
-       width="1000">
+       width="82%">
 </p>
 
 This demonstrates that `terminal_tables` can provide the rendering layer for
@@ -391,7 +391,7 @@ they cannot silently cut a merged region.
 <p align="center">
   <img src="examples/images/transform-tables.png"
        alt="Source, transposed, recomposed, and duplicated terminal tables"
-       width="460">
+       width="36%">
 </p>
 
 ## Live tables
@@ -449,7 +449,7 @@ snapshots from background producers.
 <p align="center">
   <img src="examples/images/live_data_table.gif"
        alt="Animated resize-safe rolling live table demo"
-       width="650">
+       width="60%">
 </p>
 
 The animation runs [`examples/live_data_table.nim`](examples/live_data_table.nim),
@@ -489,7 +489,7 @@ Every public feature family has a finite, runnable example:
 <p align="center">
   <img src="examples/images/all-tables.png"
        alt="Complete terminal_tables static feature showcase"
-       width="760">
+       width="55%">
 </p>
 
 </details>
