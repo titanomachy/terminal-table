@@ -1,11 +1,11 @@
 ## Optional compile-time conversion from homogeneous object collections.
 ##
-## This module is deliberately not exported by the ``terminal_tables``
+## This module is deliberately not exported by the ``terminal_table``
 ## façade. Import it when object reflection is useful:
 ##
 ## .. code-block:: nim
 ##
-##   import terminal_tables/typed_data
+##   import terminal_table/typed_data
 ##
 ##   let table = tableFromObjects(records,
 ##     tableColumn(name, "Name"),
@@ -16,9 +16,9 @@
 
 import std/macros
 
-import ../terminal_tables
+import ../terminal_table
 
-export terminal_tables
+export terminal_table
 
 type
   ColumnSpec = object

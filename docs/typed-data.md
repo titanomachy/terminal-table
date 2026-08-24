@@ -1,12 +1,12 @@
 # Typed data and parser adapters
 
-Phase 4 features live in optional modules. `import terminal_tables` remains a
+Phase 4 features live in optional modules. `import terminal_table` remains a
 small rendering and model façade and does not load Nim's macro, CSV, or JSON
 modules.
 
 ## Object collections
 
-Import `terminal_tables/typed_data` and call `tableFromObjects` with a `seq` or
+Import `terminal_table/typed_data` and call `tableFromObjects` with a `seq` or
 `array` of one non-variant object type.
 
 ```nim
@@ -42,7 +42,7 @@ ordinary typed Nim code and adds no reflection metadata or per-cell dispatch.
 
 ## CSV
 
-Import `terminal_tables/csv_adapter`. `tableFromCsv` accepts text and
+Import `terminal_table/csv_adapter`. `tableFromCsv` accepts text and
 `tableFromCsvFile` accepts a filename. Both support configurable separator,
 quote, escape, and initial-space handling. Quoted newlines and separators are
 handled by Nim's standard `parsecsv` module. Ragged and empty input raises
@@ -52,7 +52,7 @@ Set `hasHeader = false` for a headerless table.
 
 ## JSON records
 
-Import `terminal_tables/json_adapter`. `tableFromJson` accepts JSON text or a
+Import `terminal_table/json_adapter`. `tableFromJson` accepts JSON text or a
 `JsonNode`. Input must be an array of objects. Without an explicit `columns`
 list, the adapter computes the stable union of keys in first-seen order.
 

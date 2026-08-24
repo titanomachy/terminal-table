@@ -1,8 +1,8 @@
 ## Layout types shared by table models and renderers.
 
-import terminal_styles
+import terminal_style
 
-export terminal_styles
+export terminal_style
 
 type
   VerticalAlignment* = enum

@@ -1,6 +1,6 @@
 import std/[os, sequtils, strutils, tempfiles, unittest]
 
-import terminal_tables
+import terminal_table
 
 suite "table model and builders":
   test "constructs a header and validated rows":
@@ -361,7 +361,7 @@ suite "live tables":
   when defined(posix):
     test "redraws full-screen frames and restores terminal state":
       let (output, path) = createTempFile(
-        "terminal_tables_full_screen_", ".txt")
+        "terminal_table_full_screen_", ".txt")
       var outputOpen = true
       defer:
         if outputOpen:
@@ -398,7 +398,7 @@ suite "live tables":
 
     test "clears resize-wrapped physical rows in in-place mode":
       let (output, path) = createTempFile(
-        "terminal_tables_in_place_", ".txt")
+        "terminal_table_in_place_", ".txt")
       var outputOpen = true
       defer:
         if outputOpen:

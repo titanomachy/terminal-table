@@ -1,7 +1,7 @@
 ## A small table that can be compiled directly from this repository:
 ## ``nim c -r examples/basic_table.nim``.
 
-import ../src/terminal_tables
+import ../src/terminal_table
 
 when isMainModule:
   var table = initTable(["Name", "Role", "Status"])

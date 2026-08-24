@@ -4,12 +4,12 @@ Contributions are welcome through focused issues and pull requests.
 
 ## Development
 
-Install `terminal_styles` from its GitHub repository, or use a sibling
-`terminal-styles` workspace checkout, which is detected automatically. With
+Install `terminal_style` from its GitHub repository, or use a sibling
+`terminal-style` workspace checkout, which is detected automatically. With
 Nim 2.0.0 or newer, run from the package root:
 
 ```sh
-nimble install https://github.com/titanomachy/terminal-styles
+nimble install https://github.com/titanomachy/terminal-style
 ```
 
 Then run:

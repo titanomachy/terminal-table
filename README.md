@@ -1,8 +1,8 @@
-# TerminalTables
+# TerminalTable
 
 Responsive, styled, and live terminal tables for Nim.
 
-`terminal_tables` is a pure-Nim toolkit for static reports, advanced layouts,
+`terminal_table` is a pure-Nim toolkit for static reports, advanced layouts,
 resize-safe dashboards, and rolling real-time feeds. It renders to strings,
 has no import-time side effects, and understands ANSI styling, OSC hyperlinks,
 Unicode, and terminal-cell width.
@@ -15,25 +15,25 @@ Unicode, and terminal-cell width.
 
 <p align="center">
   <img src="examples/images/hero-collage.png"
-       alt="Collage of terminal_tables themes, advanced layouts, data adapters, and transformations"
+       alt="Collage of terminal_table themes, advanced layouts, data adapters, and transformations"
        width="100%">
 </p>
 
 ## Platform support
 
-TerminalTables has been tested on Linux and Windows. It should also work on
+TerminalTable has been tested on Linux and Windows. It should also work on
 macOS through its standard POSIX terminal and ANSI/VT support, but macOS has not
 yet been tested directly.
 
 ## Requirements
 
 - Nim 2.0.0 or newer
-- [`terminal_styles`](https://github.com/titanomachy/terminal-styles) 0.1.0 or newer, installed from GitHub
-- No runtime dependencies beyond `terminal_styles`
+- [`terminal_style`](https://github.com/titanomachy/terminal-style) 0.1.1 or newer, installed from GitHub
+- No runtime dependencies beyond `terminal_style`
 
 ## Contents
 
-- [TerminalTables](#terminaltables)
+- [TerminalTable](#terminaltable)
   - [Platform support](#platform-support)
   - [Requirements](#requirements)
   - [Contents](#contents)
@@ -64,21 +64,21 @@ yet been tested directly.
 Install the current source version with Nimble:
 
 ```sh
-nimble install https://github.com/titanomachy/terminal-styles
-nimble install https://github.com/titanomachy/terminal-tables
+nimble install https://github.com/titanomachy/terminal-style
+nimble install https://github.com/titanomachy/terminal-table
 ```
 
-`terminal_styles` is installed directly from its
-[GitHub repository](https://github.com/titanomachy/terminal-styles) because it
+`terminal_style` is installed directly from its
+[GitHub repository](https://github.com/titanomachy/terminal-style) because it
 is not yet listed in the Nimble package directory.
 
 Then import the complete core API:
 
 ```nim
-import terminal_tables
+import terminal_table
 ```
 
-The main module also re-exports `terminal_styles`, so colors, reusable styles,
+The main module also re-exports `terminal_style`, so colors, reusable styles,
 ANSI stripping, and display-width helpers do not need a second import. Typed
 objects and CSV/JSON parsing use opt-in modules to keep macros and parsers out
 of the core facade.
@@ -86,7 +86,7 @@ of the core facade.
 ## Quick start
 
 ```nim
-import terminal_tables
+import terminal_table
 
 var table = initTable(["Name", "Role", "Status"])
 table.addRow("Alice", "Administrator", green("online"))
@@ -293,11 +293,11 @@ The exact layout and span contracts are documented in
 
 ### Typed objects
 
-Import `terminal_tables/typed_data` to convert homogeneous object collections
+Import `terminal_table/typed_data` to convert homogeneous object collections
 at compile time. The optional module re-exports the core API.
 
 ```nim
-import terminal_tables/typed_data
+import terminal_table/typed_data
 
 type Build = object
   internalId: int
@@ -324,10 +324,10 @@ Unknown or duplicate fields and incompatible formatters fail at compile time.
 ### CSV and JSON
 
 ```nim
-import terminal_tables/csv_adapter
+import terminal_table/csv_adapter
 let csvTable = tableFromCsv("Name,Score\nAda,10")
 
-import terminal_tables/json_adapter
+import terminal_table/json_adapter
 let jsonTable = tableFromJson("""[{"name":"Ada","score":10}]""")
 ```
 
@@ -366,7 +366,7 @@ filename to use its embedded sample data. Use `h`, `j`, `k`, and `l` to move,
        width="82%">
 </p>
 
-This demonstrates that `terminal_tables` can provide the rendering layer for
+This demonstrates that `terminal_table` can provide the rendering layer for
 an interactive CSV application. A full csvlens-class viewer still needs an
 application/TUI layer for cross-platform key events, efficient virtualized
 data access, search and filtering prompts, sorting, frozen columns, row marks,
@@ -413,7 +413,7 @@ background thread.
 
 ```nim
 import std/os
-import terminal_tables
+import terminal_table
 
 var table = initTable(["Service", "Requests", "Status"])
 table.addRow("api", 0, "starting")
@@ -499,7 +499,7 @@ Every public feature family has a finite, runnable example:
 
 <p align="center">
   <img src="examples/images/all-tables.png"
-       alt="Complete terminal_tables static feature showcase"
+       alt="Complete terminal_table static feature showcase"
        width="55%">
 </p>
 

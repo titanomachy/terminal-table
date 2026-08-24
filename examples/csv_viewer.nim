@@ -1,5 +1,5 @@
 ## A compact, csvlens-inspired interactive CSV viewer built from the current
-## terminal_tables API and Nim's standard terminal input helpers.
+## terminal_table API and Nim's standard terminal input helpers.
 ##
 ## Run with an embedded data set:
 ##   nim c -r --path:src examples/csv_viewer.nim
@@ -9,11 +9,11 @@
 
 import std/[os, strformat, terminal]
 
-import ../src/terminal_tables/csv_adapter
+import ../src/terminal_table/csv_adapter
 
 const sampleCsv = """Name,Language,Stars,Status,Description
-terminal_tables,Nim,128,active,Responsive styled terminal tables
-terminal_styles,Nim,64,active,ANSI styling and display width
+terminal_table,Nim,128,active,Responsive styled terminal tables
+terminal_style,Nim,64,active,ANSI styling and display width
 csvlens,Rust,3900,active,Interactive CSV viewer
 Nim,Nim,17000,active,Efficient expressive programming language
 SQLite,C,8300,active,Embedded relational database

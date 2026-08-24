@@ -5,9 +5,9 @@
 
 import std/json
 
-import ../terminal_tables
+import ../terminal_table
 
-export terminal_tables
+export terminal_table
 
 proc jsonCellText(node: JsonNode; nullValue: string): string =
   case node.kind

@@ -1,12 +1,12 @@
 ## Optional RFC-style CSV input adapter backed by Nim's standard library.
 ##
-## Importing the main ``terminal_tables`` façade does not import a CSV parser.
+## Importing the main ``terminal_table`` façade does not import a CSV parser.
 
 import std/[parsecsv, streams]
 
-import ../terminal_tables
+import ../terminal_table
 
-export terminal_tables
+export terminal_table
 
 proc tableFromParser(parser: var CsvParser; hasHeader: bool): Table =
   var rows: seq[seq[string]]

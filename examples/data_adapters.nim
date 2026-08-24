@@ -1,9 +1,9 @@
 ## Typed objects, CSV, and JSON adapters. Compile from the package root with
 ## ``nim c -r examples/data_adapters.nim``.
 
-import ../src/terminal_tables/typed_data
-import ../src/terminal_tables/csv_adapter
-import ../src/terminal_tables/json_adapter
+import ../src/terminal_table/typed_data
+import ../src/terminal_table/csv_adapter
+import ../src/terminal_table/json_adapter
 
 type Build = object
   id: int

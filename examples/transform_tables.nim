@@ -1,7 +1,7 @@
 ## Table transformation and composition showcase. Compile from the package
 ## root with ``nim c -r examples/transform_tables.nim``.
 
-import ../src/terminal_tables
+import ../src/terminal_table
 
 proc inventory(): Table =
   result = initTable(["Item", "North", "South"])

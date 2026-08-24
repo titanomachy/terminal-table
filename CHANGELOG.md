@@ -1,7 +1,17 @@
 # Changelog
 
-This project follows Semantic Versioning. It has not yet made its first public
-release.
+This project follows Semantic Versioning.
+
+## [0.1.1] - Unreleased
+
+### Changed
+
+- Rename the Nimble package, public module namespace, and source tree from
+  `terminal_tables` to `terminal_table`.
+- Rename the project and repository references from `TerminalTables` and
+  `terminal-tables` to `TerminalTable` and `terminal-table`.
+- Rename the shared styling dependency and re-exported module from
+  `terminal_styles` to `terminal_style`.
 
 ## [0.1.0] - 2026-08-24
 

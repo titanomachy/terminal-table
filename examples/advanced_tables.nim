@@ -1,7 +1,7 @@
 ## Phase 3 selectors, panels, spans, decoration, and transformations.
 ## Compile from the package root with ``nim c -r examples/advanced_tables.nim``.
 
-import ../src/terminal_tables
+import ../src/terminal_table
 
 proc dashboard(): Table =
   result = initTable(["Service", "Region", "Status", "Requests"])

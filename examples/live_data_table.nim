@@ -4,7 +4,7 @@
 when isMainModule:
   import std/[atomics, os, random, strformat, times]
 
-  import ../src/terminal_tables
+  import ../src/terminal_table
 
   randomize()
 

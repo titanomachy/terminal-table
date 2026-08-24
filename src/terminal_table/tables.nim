@@ -2,10 +2,10 @@
 
 import std/strformat
 
-import terminal_styles
+import terminal_style
 import ./[layouts, themes]
 
-export terminal_styles, layouts, themes
+export terminal_style, layouts, themes
 
 type
   Cell* = object

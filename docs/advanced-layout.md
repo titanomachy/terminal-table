@@ -1,7 +1,7 @@
 # Advanced layout contract
 
 This document defines the Phase 3 behavior before the implementation details.
-It is part of the public contract of `terminal_tables`.
+It is part of the public contract of `terminal_table`.
 
 ## Selectors
 

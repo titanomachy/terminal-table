@@ -1,8 +1,8 @@
 import std/[json, os, sequtils, tempfiles, unittest]
 
-import terminal_tables/typed_data
-import terminal_tables/csv_adapter
-import terminal_tables/json_adapter
+import terminal_table/typed_data
+import terminal_table/csv_adapter
+import terminal_table/json_adapter
 
 type
   Build = object
@@ -85,7 +85,7 @@ suite "CSV adapter":
     check table.rows[0].cells.mapIt(it.text) == @["a", "b"]
 
   test "reads CSV files and closes their handles":
-    let (file, path) = createTempFile("terminal_tables_", ".csv")
+    let (file, path) = createTempFile("terminal_table_", ".csv")
     var fileIsOpen = true
     try:
       file.write("Key,Value\nlanguage,Nim")

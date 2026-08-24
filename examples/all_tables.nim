@@ -1,10 +1,10 @@
 ## Complete core and advanced feature showcase. Compile from the package root with
 ## ``nim c -r examples/all_tables.nim``.
 
-import ../src/terminal_tables
-import ../src/terminal_tables/typed_data
-import ../src/terminal_tables/csv_adapter
-import ../src/terminal_tables/json_adapter
+import ../src/terminal_table
+import ../src/terminal_table/typed_data
+import ../src/terminal_table/csv_adapter
+import ../src/terminal_table/json_adapter
 
 type ExampleMetric = object
   internalId: int
