@@ -61,16 +61,18 @@ yet been tested directly.
 
 ## Installation
 
-Install the current source version with Nimble:
+Install the current version with Nimble:
 
+```sh
+nimble install terminal_style
+nimble install terminal_table
+```
+
+Or if you prefer directly via Github:
 ```sh
 nimble install https://github.com/titanomachy/terminal-style
 nimble install https://github.com/titanomachy/terminal-table
 ```
-
-`terminal_style` is installed directly from its
-[GitHub repository](https://github.com/titanomachy/terminal-style) because it
-is not yet listed in the Nimble package directory.
 
 Then import the complete core API:
 
