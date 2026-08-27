@@ -1,5 +1,6 @@
 ## Phase 3 selectors, panels, spans, decoration, and transformations.
-## Compile from the package root with ``nim c -r examples/advanced_tables.nim``.
+## Compile from the package root with
+## ``nim r --path:src examples/advanced_tables.nim``.
 
 import ../src/terminal_table
 

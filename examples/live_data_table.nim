@@ -1,4 +1,6 @@
 ## Continuously append simulated service metrics to a resize-safe live table.
+## Compile from the package root with
+## ``nim r --path:src examples/live_data_table.nim``.
 ## Stop it with Ctrl+C.
 
 when isMainModule:

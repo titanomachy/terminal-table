@@ -1,5 +1,5 @@
 ## Complete core and advanced feature showcase. Compile from the package root with
-## ``nim c -r examples/all_tables.nim``.
+## ``nim r --path:src examples/all_tables.nim``.
 
 import ../src/terminal_table
 import ../src/terminal_table/typed_data

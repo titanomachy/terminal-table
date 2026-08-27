@@ -2,10 +2,10 @@
 ## terminal_table API and Nim's standard terminal input helpers.
 ##
 ## Run with an embedded data set:
-##   nim c -r --path:src examples/csv_viewer.nim
+##   nim r --path:src examples/csv_viewer.nim
 ##
 ## Or open a CSV file:
-##   nim c -r --path:src examples/csv_viewer.nim -- path/to/data.csv
+##   nim r --path:src examples/csv_viewer.nim -- path/to/data.csv
 
 import std/[os, strformat, terminal]
 

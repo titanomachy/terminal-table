@@ -1,5 +1,5 @@
 ## Typed objects, CSV, and JSON adapters. Compile from the package root with
-## ``nim c -r examples/data_adapters.nim``.
+## ``nim r --path:src examples/data_adapters.nim``.
 
 import ../src/terminal_table/typed_data
 import ../src/terminal_table/csv_adapter
@@ -40,4 +40,3 @@ when isMainModule:
   ]""", missingValue = "-")
   jsonTable.theme = modernTheme
   echo jsonTable.render()
-

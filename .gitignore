@@ -1,6 +1,8 @@
 # Nim compiler and documentation output
+build/
 nimcache/
 htmldocs/
+coverage.info
 
 # Generated test and example executables
 /examples/advanced_tables

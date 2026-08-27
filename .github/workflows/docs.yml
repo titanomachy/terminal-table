@@ -1,4 +1,4 @@
-name: Documentation
+name: Documentation and Coverage
 
 on:
   push:
@@ -23,11 +23,47 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Install terminal_style from GitHub
         run: nimble install -y https://github.com/titanomachy/terminal-style
-      - name: Generate API documentation
-        run: nimble docs -y
+      - name: Install coverage tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lcov
+      - name: Run tests with coverage instrumentation
+        shell: bash
+        run: |
+          mkdir -p build/coverage
+          for test_file in \
+            tests/test_terminal_table.nim \
+            tests/test_typed_data.nim
+          do
+            test_name="$(basename "$test_file" .nim)"
+            nim c -r \
+              --path:src \
+              --debugger:native \
+              --passC:--coverage \
+              --passL:--coverage \
+              --nimcache:"build/nimcache/coverage/$test_name" \
+              --out:"build/coverage/$test_name" \
+              "$test_file"
+          done
+      - name: Generate LCOV report
+        run: |
+          lcov \
+            --capture \
+            --directory build/nimcache/coverage \
+            --output-file coverage.info \
+            --ignore-errors inconsistent,mismatch
+          lcov \
+            --extract coverage.info \
+            "$GITHUB_WORKSPACE/src/*" \
+            --output-file coverage.info \
+            --ignore-errors inconsistent,unused
+      - name: Generate documentation and coverage badge
+        run: |
+          nimble docs -y
+          bash scripts/coverage_badge.sh coverage.info htmldocs/coverage.svg
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-      - name: Upload documentation
+      - name: Upload documentation and coverage badge
         uses: actions/upload-pages-artifact@v4
         with:
           path: htmldocs

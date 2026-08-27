@@ -1,5 +1,7 @@
 # TerminalTable
 
+[![Coverage](https://titanomachy.github.io/terminal-table/coverage.svg)](https://github.com/titanomachy/terminal-table/actions/workflows/docs.yml)
+
 Responsive, styled, and live terminal tables for Nim.
 
 `terminal_table` is a pure-Nim toolkit for static reports, advanced layouts,
@@ -99,6 +101,12 @@ table.column(1).alignment = alignCenter
 table.column(2).alignment = alignRight
 
 echo table.render(maxWidth = 60)
+```
+
+Run the basic table example with:
+
+```sh
+nim r --path:src examples/basic_table.nim
 ```
 
 <p align="center">
@@ -282,6 +290,12 @@ table.highlight(failures,
 closure when the built-in highlighting, alignment, and padding modifiers are
 not enough. Selector unions modify each matching cell once.
 
+Run the advanced tables example with:
+
+```sh
+nim r --path:src examples/advanced_tables.nim
+```
+
 <p align="center">
   <img src="examples/images/advanced-tables.png"
        alt="An advanced terminal table with a title, panel, spans, footer, colors, and shadow"
@@ -338,6 +352,12 @@ array of objects and can infer a stable union of keys or use an explicit column
 list. Detailed contracts and error behavior are in
 [`docs/typed-data.md`](docs/typed-data.md).
 
+Run the data adapters example with:
+
+```sh
+nim r --path:src examples/data_adapters.nim
+```
+
 <p align="center">
   <img src="examples/images/data-adapters.png"
        alt="Terminal tables created from typed Nim objects, CSV, and JSON"
@@ -352,7 +372,7 @@ CSV parsing, a height-aware row and column viewport, selected cell styling,
 responsive full-screen redraws, and Nim's standard terminal input:
 
 ```sh
-nim c -r --path:src examples/csv_viewer.nim -- examples/data/service_metrics.csv
+nim r --path:src examples/csv_viewer.nim -- examples/data/service_metrics.csv
 ```
 
 The repository includes
@@ -400,6 +420,12 @@ Use `extractRows`, `removeRows`, `duplicateRow`, and `splitRows` for row edits.
 The corresponding column procedures are `extractColumns`, `removeColumns`,
 `duplicateColumn`, and `splitColumns`. Axis edits reject spans on that axis so
 they cannot silently cut a merged region.
+
+Run the transformations example with:
+
+```sh
+nim r --path:src examples/transform_tables.nim
+```
 
 <p align="center">
   <img src="examples/images/transform-tables.png"
@@ -469,6 +495,12 @@ The animation runs [`examples/live_data_table.nim`](examples/live_data_table.nim
 which simulates incoming service metrics, retains a bounded rolling window,
 responds to terminal resizing, and restores terminal state on exit.
 
+Run the live demo with:
+
+```sh
+nim r --path:src examples/live_data_table.nim
+```
+
 ## Rendering
 
 The core renderer is deterministic and never queries the environment:
@@ -505,6 +537,10 @@ Every public feature family has a finite, runnable example:
        width="55%">
 </p>
 
+```sh
+nim r --path:src examples/all_tables.nim
+```
+
 </details>
 
 Further reference material:
@@ -532,7 +568,7 @@ nimble docs
 Run an individual example with:
 
 ```sh
-nim c -r examples/basic_table.nim
+nim r --path:src examples/basic_table.nim
 ```
 
 The test suite passes explicit widths and does not depend on the developer's

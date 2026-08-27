@@ -1,5 +1,5 @@
 ## Table transformation and composition showcase. Compile from the package
-## root with ``nim c -r examples/transform_tables.nim``.
+## root with ``nim r --path:src examples/transform_tables.nim``.
 
 import ../src/terminal_table
 
@@ -24,4 +24,3 @@ when isMainModule:
 
   echo "\n", bold("Duplicated summary row")
   echo source.duplicateRow(1, 2).render()
-

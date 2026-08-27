@@ -1,5 +1,5 @@
 ## A small table that can be compiled directly from this repository:
-## ``nim c -r examples/basic_table.nim``.
+## ``nim r --path:src examples/basic_table.nim``.
 
 import ../src/terminal_table
 
