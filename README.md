@@ -372,7 +372,7 @@ CSV parsing, a height-aware row and column viewport, selected cell styling,
 responsive full-screen redraws, and Nim's standard terminal input:
 
 ```sh
-nim r --path:src examples/csv_viewer.nim -- examples/data/service_metrics.csv
+nim r --path:src examples/csv_viewer.nim
 ```
 
 The repository includes
