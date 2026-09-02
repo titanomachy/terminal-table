@@ -23,7 +23,7 @@ Unicode, and terminal-cell width.
 
 ## Platform support
 
-TerminalTable has been tested on Linux and Windows. It should also work on
+`terminal_table` has been tested on Linux and Windows. It should also work on
 macOS through its standard POSIX terminal and ANSI/VT support, but macOS has not
 yet been tested directly.
 
