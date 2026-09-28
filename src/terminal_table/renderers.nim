@@ -351,7 +351,7 @@ proc spanWidth(table: Table; widths, padding: seq[int]; first, count: int): int 
 proc partialRule(table: Table; widths, padding: seq[int];
                  owners: seq[seq[CellOwner]]; afterRow: int): string =
   ## Draws a middle rule while leaving the inside of vertical spans open.
-  proc crosses(columnIndex: int): bool =
+  template crosses(columnIndex: int): bool =
     let owner = owners[afterRow][columnIndex]
     owner.row >= 0 and owner.row <= afterRow and
       owner.row + table.rows[owner.row].cells[owner.column].effectiveRowSpan >
