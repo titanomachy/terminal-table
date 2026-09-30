@@ -10,7 +10,7 @@ srcDir        = "src"
 # Dependencies
 
 requires "nim >= 2.0.0"
-requires "terminal_styles >= 0.1.0"
+requires "terminal_style >= 0.1.1"
 
 task test, "Run the terminal table test suite":
   exec "nim r --path:src tests/test_terminal_tables.nim"
