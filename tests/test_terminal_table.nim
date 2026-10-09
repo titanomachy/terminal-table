@@ -1,6 +1,8 @@
 import std/[algorithm, os, sequtils, strutils, tempfiles, unittest]
 
 import terminal_table
+import terminal_table/private/live_sequences
+import ./vt_screen
 
 suite "table model and builders":
   test "constructs a header and validated rows":
@@ -315,6 +317,32 @@ suite "sections panels spans and decoration":
     check output.contains(termBrightBlack)
 
 suite "live tables":
+  test "preserves the rightmost cells of full-width live frames":
+    let frames = [
+      "+------------------+\n|abcdefghijklmnopqr|\n+------------------+",
+      "abcdefghijklmnopqrst",
+      green("abcdefghijklmnopqrst")]
+    for frame in frames:
+      for height in [frame.splitLines().len, 5]:
+        var screen = initVtScreen(height, 20, 'x')
+        screen.feed fullScreenSequence(frame, 20, height)
+        let expectedLines = stripAnsi(frame).splitLines()
+        for index, line in screen.lines:
+          check line == (if index < expectedLines.len: expectedLines[index]
+            else: repeat(' ', 20))
+
+        if height >= 2:
+          screen.feed fullScreenSequence("short\nx", 20, height)
+          check screen.lines[0] == "short" & repeat(' ', 15)
+          check screen.lines[1] == "x" & repeat(' ', 19)
+          for index in 2 ..< height:
+            check screen.lines[index] == repeat(' ', 20)
+        else:
+          screen.feed fullScreenSequence("short", 20, height)
+          check screen.lines[0] == "short" & repeat(' ', 15)
+        screen.feed fullScreenSequence("", 20, height)
+        check screen.lines.allIt(it == repeat(' ', 20))
+
   test "updates cells and retains a bounded rolling row window":
     var table = initTable(["Service", "Requests"])
     table.theme = borderlessTheme

@@ -12,6 +12,7 @@ when defined(windows):
   import std/winlean
 
 import ./renderers
+import ./private/live_sequences
 
 export renderers
 
@@ -194,24 +195,6 @@ proc physicalLineCount(frame: string; width: int): int =
 proc clearLinesSequence(lineCount: int): string =
   if lineCount > 0: "\e[" & $lineCount & "A\e[J" else: ""
 
-proc fullScreenSequence(frame: string): string =
-  ## Replaces only visible frame rows and emits the update as one write. The
-  ## new content is painted before any unused row tail is erased, so terminals
-  ## cannot present a blank scan line while processing the update. The final
-  ## erase also removes rows left behind by a previously taller frame.
-  result = "\e[H"
-  if frame.len == 0:
-    result.add "\e[J"
-    return
-  let lines = frame.splitLines()
-  for index, line in lines:
-    result.add line
-    if index == lines.high:
-      result.add "\e[J"
-    else:
-      result.add "\e[K"
-      result.add '\n'
-
 proc startLive*(live: var LiveTable) =
   ## Starts the configured display and hides the cursor.
   ##
@@ -247,7 +230,7 @@ proc startLive*(live: var LiveTable) =
 proc draw*(live: var LiveTable) =
   ## Renders and replaces the current live table frame.
   ##
-  ## Full-screen mode always redraws from a cleared home position. In-place
+  ## Full-screen mode redraws from home and erases unused cells and rows. In-place
   ## mode clears the physical height of the previous frame at the newly
   ## detected width, which accounts for resize-induced terminal wrapping.
   if not live.active:
@@ -262,7 +245,7 @@ proc draw*(live: var LiveTable) =
       # frame is not presented between updates. On Windows this also avoids
       # Nim's eraseScreen, which clears the complete scrollback buffer through
       # several Win32 calls and can be visibly slow for a large buffer.
-      live.output.write frame.fullScreenSequence()
+      live.output.write frame.fullScreenSequence(width, terminalHeight())
     else:
       live.output.setCursorPos(0, 0)
       live.output.eraseScreen()
