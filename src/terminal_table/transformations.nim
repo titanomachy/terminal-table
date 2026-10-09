@@ -53,6 +53,21 @@ proc transformedBody(table: Table; height, width: int;
       if max(1, source.rowSpan) > 1 or max(1, source.columnSpan) > 1:
         let target = mapSpan(rowIndex, columnIndex, max(1, source.rowSpan),
           max(1, source.columnSpan))
+        let mappedAnchor = mapCell(rowIndex, columnIndex)
+        # Wrap transformed offsets inside the span to keep its anchor at the
+        # top-left without discarding covered cells or breaking reversibility.
+        for coveredRow in rowIndex ..< rowIndex + max(1, source.rowSpan):
+          for coveredColumn in columnIndex ..< columnIndex +
+              max(1, source.columnSpan):
+            let mapped = mapCell(coveredRow, coveredColumn)
+            let targetRow = target.row +
+              (mapped.row - mappedAnchor.row + target.rowSpan) mod target.rowSpan
+            let targetColumn = target.column +
+              (mapped.column - mappedAnchor.column + target.columnSpan) mod
+                target.columnSpan
+            result.rows[targetRow].cells[targetColumn] =
+              table.rows[coveredRow].cells[coveredColumn]
+            result.rows[targetRow].cells[targetColumn].resetSpan()
         result.rows[target.row].cells[target.column].setSpan(
           target.columnSpan, target.rowSpan)
 
@@ -68,6 +83,7 @@ proc transpose*(table: Table): Table =
 
 proc rotateClockwise*(table: Table): Table =
   ## Rotates the body 90 degrees clockwise.
+  ## Merged values and their styles stay at the transformed span's top-left.
   let height = table.rows.len
   let width = table.columnCount
   table.transformedBody(width, height,
@@ -79,6 +95,7 @@ proc rotateClockwise*(table: Table): Table =
 
 proc rotateCounterClockwise*(table: Table): Table =
   ## Rotates the body 90 degrees counter-clockwise.
+  ## Merged values and their styles stay at the transformed span's top-left.
   let height = table.rows.len
   let width = table.columnCount
   table.transformedBody(width, height,
@@ -90,6 +107,7 @@ proc rotateCounterClockwise*(table: Table): Table =
 
 proc rotate180*(table: Table): Table =
   ## Rotates the body by 180 degrees.
+  ## Merged values and their styles stay at the transformed span's top-left.
   let height = table.rows.len
   let width = table.columnCount
   table.transformedBody(height, width,

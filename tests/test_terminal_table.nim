@@ -1,4 +1,4 @@
-import std/[os, sequtils, strutils, tempfiles, unittest]
+import std/[algorithm, os, sequtils, strutils, tempfiles, unittest]
 
 import terminal_table
 
@@ -452,6 +452,67 @@ suite "table transformations":
     check transposed.cell(0, 0).rowSpan == 2
     check transposed.cell(0, 0).columnSpan == 1
     discard transposed.render()
+
+  test "keeps merged values and styles at rotated anchors":
+    for (spanRows, spanColumns) in [(1, 2), (2, 1), (2, 3)]:
+      var table = initTable(Positive(4))
+      table.theme = asciiTheme
+      for rowIndex in 0 ..< 3:
+        var values: seq[string]
+        for columnIndex in 0 ..< 4:
+          let covered = rowIndex < spanRows and
+            columnIndex >= 1 and columnIndex < 1 + spanColumns
+          values.add (if covered: "hidden" else: "outside") &
+            $rowIndex & $columnIndex
+        table.addRow(initRow(values))
+      table.cell(0, 1).text = "VISIBLE"
+      table.cell(0, 1).style = initTerminalStyle(
+        foreground = colorBlue, attributes = {taBold})
+      table.cell(0, 1).setAlignment(alignRight)
+      table.cell(0, 1).setSpan(columns = spanColumns, rows = spanRows)
+      let original = table
+
+      for (rotated, anchorRow, anchorColumn, targetRows, targetColumns) in [
+          (table.rotateClockwise(), 1, 3 - spanRows, spanColumns, spanRows),
+          (table.rotateCounterClockwise(), 3 - spanColumns, 0,
+            spanColumns, spanRows),
+          (table.rotate180(), 3 - spanRows, 3 - spanColumns,
+            spanRows, spanColumns)]:
+        let anchor = rotated.cell(anchorRow, anchorColumn)
+        check anchor.text == "VISIBLE"
+        check anchor.style == table.cell(0, 1).style
+        check anchor.alignment == alignRight
+        check anchor.hasAlignment
+        check anchor.rowSpan == targetRows
+        check anchor.columnSpan == targetColumns
+        let output = stripAnsi(rotated.render())
+        check "VISIBLE" in output
+        check "hidden" notin output
+        check rotated.rows.mapIt(it.cells.mapIt(it.text)).concat().sorted() ==
+          table.rows.mapIt(it.cells.mapIt(it.text)).concat().sorted()
+
+      check table.rotateClockwise().rotateCounterClockwise().rows == table.rows
+      check table.rotate180().rotate180().rows == table.rows
+      check table.rotateClockwise().rotateClockwise().rotateClockwise().
+        rotateClockwise().rows == table.rows
+      check table.rows == original.rows
+
+  test "renders the original merged value after rotating 180 degrees":
+    var table = initTable(Positive(2))
+    table.theme = asciiTheme
+    table.padding = initCellPadding(0, 0)
+    table.addRow("A", "B")
+    table.addRow("C", "D")
+    table.cell(0, 0).setSpan(columns = 2)
+    var rotated = table.rotate180()
+    for column in rotated.columns.mitems:
+      column.width = fixedWidth(2)
+    check rotated.render() == """
++--+--+
+|D |C |
++--+--+
+|A    |
++--+--+"""
 
   test "concatenates and merges equally shaped tables":
     var left = initTable(Positive(1))

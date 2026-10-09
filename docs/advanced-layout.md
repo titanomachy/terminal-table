@@ -46,7 +46,10 @@ left-to-right fairness of the core renderer. Fixed and minimum widths remain
 hard constraints. Shadows and margins count toward `maxWidth`.
 
 Transformations preserve cell values and cell styles. Geometric operations
-transform span anchors and dimensions when this is unambiguous. Concatenation
+carry a span's anchor cell, including its text and style, to the transformed
+region's top-left corner and transform its dimensions. Covered cells wrap
+within the transformed region when the anchor changes corners, retaining every
+cell value and making rotations reversible. Concatenation
 preserves existing span geometry. Row editing rejects tables containing
 vertical spans, and column editing rejects tables containing horizontal spans,
 so an edit cannot ambiguously cut or duplicate a merged region. Callers may

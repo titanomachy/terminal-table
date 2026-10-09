@@ -24,3 +24,10 @@ when isMainModule:
 
   echo "\n", bold("Duplicated summary row")
   echo source.duplicateRow(1, 2).render()
+
+  var merged = inventory()
+  merged.cell(0, 0).text = "Regional inventory"
+  merged.cell(0, 0).style = initTerminalStyle(foreground = colorCyan)
+  merged.cell(0, 0).setSpan(columns = 3)
+  echo "\n", bold("Merged value rotated 180 degrees")
+  echo merged.rotate180().render()
