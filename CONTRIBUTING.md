@@ -27,6 +27,11 @@ use fixed cell text and medians of interleaved timing batches to catch quadratic
 growth without relying on an absolute speed requirement. Run them directly with
 `nim r -d:release --path:src tests/test_render_performance.nim`.
 
+They also render a fixed 4,000-row table 200 times with modern and borderless
+themes, comparing the first and last timing windows and checking that every
+output is identical. This bounded check catches substantial accumulating
+slowdown; it is not a long-running soak test.
+
 Core rendering must stay deterministic, return strings, and measure ANSI and
 Unicode content in terminal cells. Keep parsers and macros in optional modules.
 New public behavior needs doc comments, validation and output tests, and a
