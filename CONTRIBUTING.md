@@ -21,9 +21,11 @@ nimble examples
 nimble docs
 ```
 
-`nimble test` also runs release-mode rendering performance checks. These compare
-the cost of rendering 1,000 and 8,000 rows with and without row separators to
-catch quadratic growth without relying on an absolute speed requirement.
+`nimble test` also runs release-mode rendering performance checks for modern,
+ASCII, and borderless themes at 1,000, 2,000, 4,000, and 8,000 rows. The checks
+use fixed cell text and medians of interleaved timing batches to catch quadratic
+growth without relying on an absolute speed requirement. Run them directly with
+`nim r -d:release --path:src tests/test_render_performance.nim`.
 
 Core rendering must stay deterministic, return strings, and measure ANSI and
 Unicode content in terminal cells. Keep parsers and macros in optional modules.
