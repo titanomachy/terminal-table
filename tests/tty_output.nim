@@ -34,16 +34,23 @@ proc initTtyOutput*(): TtyOutput =
     raise newException(IOError, "cannot open test pseudoterminal")
 
 proc capture*(tty: var TtyOutput): string =
-  ## Closes the writer and drains the terminal's output, including VT controls.
-  tty.output.close()
-  tty.output = nil
+  ## Drains output before closing the writer; macOS discards unread PTY data
+  ## when the last slave descriptor closes.
+  tty.output.flushFile()
+  let flags = fcntl(tty.master, F_GETFL)
+  if flags < 0 or fcntl(tty.master, F_SETFL, flags or O_NONBLOCK) < 0:
+    raiseOSError(osLastError())
   var buffer: array[4096, char]
   while true:
     let count = posix.read(tty.master, addr buffer[0], buffer.len)
     if count > 0:
       for index in 0 ..< count:
         result.add buffer[index]
-    elif count == 0 or osLastError() == OSErrorCode(EIO):
+    elif count == 0 or osLastError() == OSErrorCode(EIO) or
+        osLastError() == OSErrorCode(EAGAIN) or
+        osLastError() == OSErrorCode(EWOULDBLOCK):
       break
     elif osLastError() != OSErrorCode(EINTR):
       raiseOSError(osLastError())
+  tty.output.close()
+  tty.output = nil
