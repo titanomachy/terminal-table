@@ -2,6 +2,13 @@
 
 This project follows Semantic Versioning.
 
+## [Unreleased]
+
+### Fixed
+
+- Append plain-text live frames to redirected output without terminal controls
+  or Windows console operations.
+
 ## [0.1.2] - 2026-10-09
 
 ### Fixed

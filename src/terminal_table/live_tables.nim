@@ -5,6 +5,7 @@
 ## ``draw``. Full-screen mode replaces the complete terminal frame and can use
 ## the terminal's alternate screen. In-place mode preserves content above the
 ## table and accounts for terminal rows created by wrapping after a resize.
+## Redirected output appends plain-text frames without taking terminal ownership.
 
 import std/[strutils, terminal]
 
@@ -39,6 +40,7 @@ type
     options*: LiveTableOptions
     output: File
     active: bool
+    usingTerminal: bool
     usingAlternateScreen: bool
     usingVtSequences: bool
     previousFrame: string
@@ -118,7 +120,7 @@ proc initLiveTable*(table: Table;
   ##
   ## ``output`` is retained for the complete lifecycle. Automatic sizing uses
   ## the process terminal width; set ``availableWidth`` for a deterministic
-  ## custom output or test stream.
+  ## custom output or test stream. Files and pipes receive plain-text frames.
   options.validate()
   if output == nil:
     raise newException(ValueError, "live table output cannot be nil")
@@ -200,9 +202,15 @@ proc startLive*(live: var LiveTable) =
   ##
   ## Calling this procedure again while active has no effect. Alternate-screen
   ## mode applies to a full-screen live table attached to a VT-capable TTY.
+  ## File and pipe output starts an append-only session without terminal controls.
   if live.active:
     return
   live.options.validate()
+  live.usingTerminal = live.output.isatty
+  live.previousFrame.setLen(0)
+  if not live.usingTerminal:
+    live.active = true
+    return
 
   when defined(posix):
     live.usingVtSequences = true
@@ -210,7 +218,7 @@ proc startLive*(live: var LiveTable) =
     live.usingVtSequences = live.enableWindowsVt()
 
   if live.options.mode == ltmFullScreen and live.options.alternateScreen and
-      live.output.isatty and live.usingVtSequences:
+      live.usingVtSequences:
     live.output.write "\e[?1049h"
     live.usingAlternateScreen = true
   if live.options.mode == ltmFullScreen:
@@ -224,7 +232,6 @@ proc startLive*(live: var LiveTable) =
   else:
     live.output.hideCursor()
   live.output.flushFile()
-  live.previousFrame.setLen(0)
   live.active = true
 
 proc draw*(live: var LiveTable) =
@@ -233,11 +240,16 @@ proc draw*(live: var LiveTable) =
   ## Full-screen mode redraws from home and erases unused cells and rows. In-place
   ## mode clears the physical height of the previous frame at the newly
   ## detected width, which accounts for resize-induced terminal wrapping.
+  ## File and pipe output appends a plain-text frame followed by a newline.
   if not live.active:
     raise newException(ValueError, "call startLive before drawing a live table")
   let
     width = live.resolvedWidth()
     frame = live.table.render(width)
+  if not live.usingTerminal:
+    live.output.writeLine(stripAnsi(frame))
+    live.output.flushFile()
+    return
   case live.options.mode
   of ltmFullScreen:
     if live.usingVtSequences:
@@ -263,20 +275,23 @@ proc stopLive*(live: var LiveTable) =
   ## Restores attributes, screen state, and cursor visibility.
   ##
   ## Calling this procedure for an inactive table has no effect.
+  ## File and pipe sessions stop without emitting terminal controls.
   if not live.active:
     return
-  if live.usingVtSequences:
-    live.output.write "\e[0m"
-    if live.usingAlternateScreen:
-      live.output.write "\e[?1049l"
-    live.output.write "\e[?25h"
-  else:
-    live.output.resetAttributes()
-    live.output.showCursor()
-  live.output.flushFile()
-  when defined(windows):
-    live.restoreWindowsConsoleMode()
+  if live.usingTerminal:
+    if live.usingVtSequences:
+      live.output.write "\e[0m"
+      if live.usingAlternateScreen:
+        live.output.write "\e[?1049l"
+      live.output.write "\e[?25h"
+    else:
+      live.output.resetAttributes()
+      live.output.showCursor()
+    live.output.flushFile()
+    when defined(windows):
+      live.restoreWindowsConsoleMode()
   live.active = false
+  live.usingTerminal = false
   live.usingAlternateScreen = false
   live.usingVtSequences = false
   live.previousFrame.setLen(0)

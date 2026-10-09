@@ -468,6 +468,10 @@ processing and restore the original console mode when they stop. Set
 `options.mode = ltmInPlace` to preserve content above the table. In-place
 redraws account for physical rows introduced by wrapping after a resize.
 
+When output is a file or pipe, each `draw` appends a plain-text frame followed
+by a newline. Terminal controls and console-mode changes are restricted to TTY
+output.
+
 For rolling feeds, cap the retained body rows:
 
 ```nim

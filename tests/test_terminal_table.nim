@@ -1,8 +1,41 @@
-import std/[algorithm, os, sequtils, strutils, tempfiles, unittest]
+import std/[algorithm, os, osproc, sequtils, strutils, tempfiles, unittest]
 
 import terminal_table
 import terminal_table/private/live_sequences
 import ./vt_screen
+
+when defined(posix):
+  import ./tty_output
+
+proc writeRedirectedFrames(output: File; mode: LiveTableMode) =
+  var table = initTable(Positive(1))
+  table.theme = borderlessTheme
+  table.padding = initCellPadding(0, 0)
+  table.style = initTerminalStyle(attributes = {taBold})
+  table.addRow(green("first"))
+  var options = initLiveTableOptions()
+  options.availableWidth = 20
+  options.mode = mode
+  var live = initLiveTable(table, options, output)
+  try:
+    live.startLive()
+    live.startLive()
+    doAssert live.isActive
+    live.draw()
+    live.updateCell(0, 0, red("second"))
+    live.draw()
+  finally:
+    live.stopLive()
+    live.stopLive()
+  doAssert not live.isActive
+  doAssert live.table.useColor
+  doAssert '\e' in live.renderFrame()
+
+when isMainModule:
+  if paramCount() == 1 and paramStr(1) == "--redirected-live-output":
+    for mode in [ltmFullScreen, ltmInPlace]:
+      writeRedirectedFrames(stdout, mode)
+    quit(0)
 
 suite "table model and builders":
   test "constructs a header and validated rows":
@@ -317,6 +350,27 @@ suite "sections panels spans and decoration":
     check output.contains(termBrightBlack)
 
 suite "live tables":
+  test "appends plain frames to file output in both live modes":
+    let (output, path) = createTempFile("terminal_table_redirected_", ".txt")
+    var outputOpen = true
+    defer:
+      if outputOpen:
+        output.close()
+      path.removeFile()
+    for mode in [ltmFullScreen, ltmInPlace]:
+      writeRedirectedFrames(output, mode)
+    output.close()
+    outputOpen = false
+    check path.readFile().replace("\r\n", "\n") ==
+      "first\nsecond\nfirst\nsecond\n"
+
+  test "supports stdout redirected to a pipe in both live modes":
+    let child = execCmdEx(quoteShell(getAppFilename()) &
+      " --redirected-live-output")
+    check child.exitCode == 0
+    check child.output.replace("\r\n", "\n") ==
+      "first\nsecond\nfirst\nsecond\n"
+
   test "preserves the rightmost cells of full-width live frames":
     let frames = [
       "+------------------+\n|abcdefghijklmnopqr|\n+------------------+",
@@ -388,23 +442,16 @@ suite "live tables":
 
   when defined(posix):
     test "redraws full-screen frames and restores terminal state":
-      let (output, path) = createTempFile(
-        "terminal_table_full_screen_", ".txt")
-      var outputOpen = true
-      defer:
-        if outputOpen:
-          output.close()
-        if path.fileExists:
-          path.removeFile()
+      var tty = initTtyOutput()
+      defer: tty.close()
 
       var table = initTable(Positive(1))
       table.theme = borderlessTheme
       table.padding = initCellPadding(0, 0)
       table.addRow("live value")
       var options = initLiveTableOptions()
-      options.alternateScreen = false
       options.availableWidth = 20
-      var live = initLiveTable(table, options, output)
+      var live = initLiveTable(table, options, tty.output)
 
       expect ValueError:
         live.draw()
@@ -416,23 +463,15 @@ suite "live tables":
       live.stopLive()
       check not live.isActive
 
-      output.close()
-      outputOpen = false
-      let emitted = path.readFile()
-      check emitted.startsWith("\e[2J\e[H\e[?25l")
+      let emitted = tty.capture()
+      check emitted.startsWith("\e[?1049h\e[2J\e[H\e[?25l")
       check "\e[Hlive value\e[J" in emitted
       check "\e[2K" notin emitted
-      check emitted.endsWith("\e[0m\e[?25h")
+      check emitted.endsWith("\e[0m\e[?1049l\e[?25h")
 
     test "clears resize-wrapped physical rows in in-place mode":
-      let (output, path) = createTempFile(
-        "terminal_table_in_place_", ".txt")
-      var outputOpen = true
-      defer:
-        if outputOpen:
-          output.close()
-        if path.fileExists:
-          path.removeFile()
+      var tty = initTtyOutput()
+      defer: tty.close()
 
       var table = initTable(Positive(1))
       table.theme = borderlessTheme
@@ -443,16 +482,14 @@ suite "live tables":
       options.mode = ltmInPlace
       options.alternateScreen = false
       options.availableWidth = 20
-      var live = initLiveTable(table, options, output)
+      var live = initLiveTable(table, options, tty.output)
       live.startLive()
       live.draw()
       live.options.availableWidth = 6
       live.draw()
       live.stopLive()
 
-      output.close()
-      outputOpen = false
-      let emitted = path.readFile()
+      let emitted = tty.capture()
       # The old 18-cell line occupies three rows after shrinking to six cells.
       check "\e[3A\e[J" in emitted
 
