@@ -21,6 +21,10 @@ nimble examples
 nimble docs
 ```
 
+`nimble test` also runs release-mode rendering performance checks. These compare
+the cost of rendering 1,000 and 8,000 rows with and without row separators to
+catch quadratic growth without relying on an absolute speed requirement.
+
 Core rendering must stay deterministic, return strings, and measure ANSI and
 Unicode content in terminal cells. Keep parsers and macros in optional modules.
 New public behavior needs doc comments, validation and output tests, and a

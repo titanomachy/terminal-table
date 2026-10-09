@@ -15,6 +15,7 @@ requires "terminal_style >= 0.1.1"
 task test, "Run the terminal table test suite":
   exec "nim r --path:src tests/test_terminal_table.nim"
   exec "nim r --path:src tests/test_typed_data.nim"
+  exec "nim r -d:release --path:src tests/test_render_performance.nim"
 
 task examples, "Check that all examples compile":
   exec "nim check examples/basic_table.nim"
