@@ -44,3 +44,38 @@ suite "rendering performance":
       echo "    ", measurement
       checkpoint measurement
       check growth < 24.0
+
+  test "repeated rendering of a fixed table stays stable":
+    # Build once: appending before each render measures row-count growth,
+    # rather than slowdown across repeated renders of the same input.
+    # Keep the run bounded for CI and compare the fastest samples in the
+    # first and last windows to reduce interference from other processes.
+    const repetitions = 200
+    const windowSize = 20
+    for theme in [modernTheme, borderlessTheme]:
+      let table = sampleTable(4000, theme)
+      let expected = table.render() # Also warms up the renderer.
+      var first = high(int64)
+      var last = high(int64)
+      for sample in 0 ..< repetitions:
+        let started = getMonoTime()
+        let output = table.render()
+        let elapsed = (getMonoTime() - started).inNanoseconds
+        if sample < windowSize:
+          first = min(first, elapsed)
+        if sample >= repetitions - windowSize:
+          last = min(last, elapsed)
+        # Validate outside the timed interval; every render must keep the
+        # same row count and produce exactly the same complete output.
+        doAssert table.rows.len == 4000
+        doAssert output == expected
+      let growth = last.float / max(1'i64, first).float
+      let measurement = "row separators=" & $theme.showRowSeparators &
+        ", fixed rows=4000, renders=" & $repetitions &
+        ", first window=" & $first & " ns, last window=" & $last &
+        " ns, growth=" & $growth
+      echo "    ", measurement
+      checkpoint measurement
+      # Allow generous headroom for timing noise, without an absolute
+      # machine-dependent deadline or allocator-specific memory limits.
+      check growth < 3.0
