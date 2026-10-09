@@ -23,9 +23,8 @@ Unicode, and terminal-cell width.
 
 ## Platform support
 
-`terminal_table` has been tested on Linux and Windows. It should also work on
-macOS through its standard POSIX terminal and ANSI/VT support, but macOS has not
-yet been tested directly.
+`terminal_table` is tested in CI on Linux, macOS, and Windows with Nim 2.0.x,
+2.2.x, and stable.
 
 ## Requirements
 

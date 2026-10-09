@@ -4,10 +4,17 @@ This project follows Semantic Versioning.
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-10-09
+
 ### Fixed
 
+- Preserve merged-cell content, styles, and covered values when rotating tables.
+- Preserve the last character of full-width live frames and clear stale output
+  without scrolling a frame that fills the terminal height.
 - Append plain-text live frames to redirected output without terminal controls
   or Windows console operations.
+- Keep terminal-output regression tests portable on macOS by capturing queued
+  pseudoterminal output before closing the slave.
 
 ## [0.1.2] - 2026-10-09
 
