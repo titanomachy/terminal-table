@@ -2,6 +2,12 @@
 
 This project follows Semantic Versioning.
 
+## [0.1.2] - 2026-10-09
+
+### Fixed
+
+- quadratic explosion bugfix by [https://github.com/pacien](https://github.com/pacien)
+
 ## [0.1.1] - 2026-08-24
 
 ### Changed
